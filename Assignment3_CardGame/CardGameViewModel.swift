@@ -2,9 +2,9 @@ import SwiftUI
 
 class CardGameViewModel: ObservableObject {
     @Published var cards: [Card] = []
-    @Published var score: Int = 0
-    @Published var moves: Int = 0
-    @Published var gameOver: Bool = false
+    @Published var score = 0
+    @Published var moves = 0
+    @Published var gameOver = false
     
     private var firstSelectedCard: Card?
 
@@ -13,7 +13,8 @@ class CardGameViewModel: ObservableObject {
     }
     
     func startNewGame() {
-        let emojis = ["😀", "😎", "🥳", "🤓"]
+        // 6 pairs of emojis = 12 cards
+        let emojis = ["😀", "😎", "🥳", "🤓", "👻", "🍎"]
         var newCards: [Card] = []
         for emoji in emojis {
             newCards.append(Card(content: emoji))
@@ -39,12 +40,13 @@ class CardGameViewModel: ObservableObject {
            let firstIndex = cards.firstIndex(where: { $0.id == firstCard.id }) {
             moves += 1
             cards[index].isFaceUp = true
-            
             if cards[index].content == cards[firstIndex].content {
                 cards[index].isMatched = true
                 cards[firstIndex].isMatched = true
                 score += 2
-                if cards.allSatisfy({ $0.isMatched }) { gameOver = true }
+                if cards.allSatisfy({ $0.isMatched }) {
+                    gameOver = true
+                }
             } else {
                 if score > 0 { score -= 1 }
                 DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
